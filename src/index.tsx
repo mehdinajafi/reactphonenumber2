@@ -29,6 +29,7 @@ const useStyles = createUseStyles((props) => ({
   inputsWrapper: {
     display: 'flex',
     '& .phone-number-input': {
+      direction: 'ltr',
       MozAppearance: 'textfield'
     },
     '& .phone-number-input::-webkit-outer-spin-button, .phone-number-input::-webkit-inner-spin-button': {
@@ -198,6 +199,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
           value={phoneNumberValue}
           onChange={(e) => handleOnChangePhoneNumberValue(e)}
           className='phone-number-input'
+          dir='ltr'
           required
         />
       </div>
