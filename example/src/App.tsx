@@ -19,7 +19,7 @@ const App = () => {
   return (
     <div>
       <ReactPhonenumber
-        options={{ dir: 'rtl' }}
+        options={{ dir: 'ltr' }}
         onChange={changePhoneNumber}
         countries={countries}
       />

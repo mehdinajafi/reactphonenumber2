@@ -194,7 +194,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
       ...options
     })
 
-    $('.select-country').on('select2:select', function (e: any) {
+    $('.select-country-phonenumber').on('select2:select', function (e: any) {
       const data = e.params.data
       handleSelectCodeArea(data.dialingCode)
     })
