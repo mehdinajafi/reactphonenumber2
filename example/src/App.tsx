@@ -17,11 +17,13 @@ const App = () => {
   }
 
   return (
-    <ReactPhonenumber
-      options={{}}
-      onChange={changePhoneNumber}
-      countries={countries}
-    />
+    <div>
+      <ReactPhonenumber
+        options={{ dir: 'rtl' }}
+        onChange={changePhoneNumber}
+        countries={countries}
+      />
+    </div>
   )
 }
 

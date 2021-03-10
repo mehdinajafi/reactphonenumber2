@@ -37,18 +37,34 @@ const useStyles = createUseStyles((props) => ({
       margin: 0
     },
     '& .select2-container': {
-      right: '0'
+      right: '0',
+      left: '0 !important'
     },
     '& .select2-container .select2-dropdown': {
       width: '100% !important',
-      right: '0'
+      right: '0',
+      left: '0'
     },
     '& .select2-container .select2-selection': {
       right: '0',
+      left: '0',
       outline: 'none',
       fontSize: '14px',
       display: 'flex',
       alignItems: 'center'
+    },
+    "& .select2-container--default[dir='rtl'] .select2-selection--single .select2-selection__arrow": {
+      left: 'auto',
+      right: '0.5em'
+    },
+    "& .select2-container[dir='rtl'] .select2-selection--single .select2-selection__rendered": {
+      paddingRight: '25px',
+      paddingLeft: '10px'
+    },
+    '& .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable': {
+      '& div > div > span': {
+        color: '#fff !important'
+      }
     }
   }
 }))
@@ -66,7 +82,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
     inputValue ? Number(inputValue).toString() : ''
   )
   const [selectedDialingCode, setSelectedDialingCode] = React.useState(
-    selectValue ? selectValue : '98'
+    selectValue ? selectValue : countries[0].dialingCode
   )
 
   const classes = useStyles({ props: 'rtl' })
@@ -96,7 +112,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
       }
 
       const $country = $(
-        `<div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
+        `<div dir="ltr" style="display: flex; align-items: center; justify-content: space-between; width: 100%">
           <div style="margin-left: 0.5em; margin-right: 0.5em">
             <span class="flag-icon flag-icon-${country.id.toLowerCase()} flag-icon-squared"></span>
           </div>
@@ -120,14 +136,18 @@ export const ReactPhonenumber: React.FC<Props> = ({
 
       const $country = $(
         `
-        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; font-size: 13px">
-          <div style="display: flex">
-            <span style="width: 4em; color: #828282">+${
+        <div style="display: flex; align-items: center; flex-direction: ${
+          options?.dir === 'rtl' ? 'row-reverse' : 'ltr'
+        }; justify-content: space-between; width: 100%; font-size: 13px">
+          <div dir="ltr" style="display: flex; width: 90%;">
+            <span style="width: 4em; color: #828282; text-align: left">+${
               country.dialingCode
             }</span>
-            <span style="font-weight: bold;">${country.name}</span>
+            <span style="font-weight: bold; text-align: ${
+              options?.dir === 'rtl' ? 'right' : 'left'
+            };flex-grow: 1; padding: 0 0.5em;">${country.name}</span>
           </div>
-          <div>
+          <div dir="rtl" style="display: flex; width: 10%;">
             <span class="flag-icon flag-icon-${country.id.toLowerCase()} flag-icon-squared"></span>
           </div>
         </div>
