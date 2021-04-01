@@ -28,20 +28,30 @@ import React, { useState } from 'react'
 import { ReactPhonenumber } from 'reactphonenumber2'
 
 const countries = [
-  { id: 'IR', name: 'Iran', dialingCode: '98' },
-  { id: 'AF', name: 'Afghanistan', dialingCode: '93' },
-  { id: 'AL', name: 'Albania', dialingCode: '213' },
-  { id: 'AS', name: 'American Samoa', dialingCode: '1684' }
+  { code: 'IR', name: 'Iran', dialingCode: '98' },
+  { code: 'AF', name: 'Afghanistan', dialingCode: '93' },
+  { code: 'AL', name: 'Albania', dialingCode: '213' },
+  { code: 'AS', name: 'American Samoa', dialingCode: '1684' }
 ]
 
 const App = () => {
-  const [phoneNumber, setphoneNumber] = useState('')
+  const [phoneNumber, setphoneNumber] = useState<string>('')
 
-  const changePhoneNumber = (phoneNumber) => {
-    setphoneNumber(phoneNumber)
+  const changePhoneNumber = (phoneNumber: string, selected:any) => {
+    console.log(JSON.stringify({
+      phoneNumber, selected
+    }, null, 2))
   }
 
-  return <ReactPhonenumber onChange={changePhoneNumber} countries={countries} />
+  return (
+    <div>
+      <ReactPhonenumber
+        onChange={changePhoneNumber}
+        countries={countries}
+        defaultCode="IR"
+      />
+    </div>
+  )
 }
 
 export default App
