@@ -23,7 +23,7 @@
     "react-jss": "^10.5.1",
     "react-scripts": "file:../node_modules/react-scripts",
     "reactphonenumber2": "file:..",
-    "select2": "^4.1.0-rc.0",
+    "select2": "^4.0.3",
     "typescript": "file:../node_modules/typescript"
   },
   "devDependencies": {

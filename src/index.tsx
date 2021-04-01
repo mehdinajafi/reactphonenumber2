@@ -5,24 +5,24 @@ import 'select2/dist/js/select2.min.js'
 import 'select2/dist/css/select2.min.css'
 
 interface country {
-  id: string
+  code: string
   name: string
   dialingCode: string
 }
 
 interface Props {
   inputValue?: string
-  selectValue?: string
-  onChange: (
-    phoneNumber: string,
-    selectedDialingCode: string,
-    phoneNumberValue: string
-  ) => void
-  countries: country[]
+  defaultCode?: string
   options?: Select2.Options
   className?: string
   dir?: 'ltr' | 'rtl'
   searchDir?: 'ltr' | 'rtl'
+  onChange: (
+    phoneNumber: string,
+    selected: country,
+    phoneNumberInputValue: string
+  ) => void
+  countries: country[]
 }
 
 const useStyles = createUseStyles((props) => ({
@@ -71,8 +71,8 @@ const useStyles = createUseStyles((props) => ({
 
 export const ReactPhonenumber: React.FC<Props> = ({
   inputValue,
-  selectValue,
   onChange,
+  defaultCode,
   countries,
   options,
   className = '',
@@ -81,40 +81,55 @@ export const ReactPhonenumber: React.FC<Props> = ({
   const [phoneNumberValue, setPhoneNumberValue] = React.useState(
     inputValue ? Number(inputValue).toString() : ''
   )
+  const [selected, setSelected] = React.useState(
+    defaultCode
+      ? countries.filter((country) => country.code === defaultCode)[0]
+      : countries[0]
+  )
   const [selectedDialingCode, setSelectedDialingCode] = React.useState(
-    selectValue ? selectValue : countries[0].dialingCode
+    defaultCode
+      ? countries.filter((country) => country.code === defaultCode)[0]
+          .dialingCode
+      : countries[0].dialingCode
   )
 
   const classes = useStyles({ props: 'rtl' })
 
+  // handle OnChanges
   const handleOnChangePhoneNumberValue = (
     e: React.FormEvent<HTMLInputElement>
   ) => {
     setPhoneNumberValue((e.target as HTMLInputElement).value)
   }
 
-  const handleSelectCodeArea = (codeArea: any) => {
-    setSelectedDialingCode(codeArea)
+  const handleOnChangeSelected = (country:country) => {
+    setSelected(country)
   }
 
+  const handleOnChangeDialogCode = (dialingCode: string) => {
+    setSelectedDialingCode(dialingCode)
+  }
+
+  // OnChange Function
   React.useEffect(() => {
     onChange(
       selectedDialingCode + Number(phoneNumberValue).toString(),
-      selectedDialingCode,
+      selected,
       Number(phoneNumberValue).toString()
     )
-  }, [selectedDialingCode, phoneNumberValue, onChange])
+  }, [selected, phoneNumberValue, onChange])
 
+  // Select2
   React.useEffect(() => {
     function formatState(country: any) {
-      if (!country.id) {
+      if (!country.code) {
         return country.name
       }
 
       const $country = $(
         `<div dir="ltr" style="display: flex; align-items: center; justify-content: space-between; width: 100%">
           <div style="margin-left: 0.5em; margin-right: 0.5em">
-            <span class="flag-icon flag-icon-${country.id.toLowerCase()} flag-icon-squared"></span>
+            <span class="flag-icon flag-icon-${country.code.toLowerCase()} flag-icon-squared"></span>
           </div>
           <div>
             <span>${
@@ -130,7 +145,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
     }
 
     function templateResult(country: any) {
-      if (!country.id) {
+      if (!country.code) {
         return country.name
       }
 
@@ -148,7 +163,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
             };flex-grow: 1; padding: 0 0.5em;">${country.name}</span>
           </div>
           <div dir="rtl" style="display: flex; width: 10%;">
-            <span class="flag-icon flag-icon-${country.id.toLowerCase()} flag-icon-squared"></span>
+            <span class="flag-icon flag-icon-${country.code.toLowerCase()} flag-icon-squared"></span>
           </div>
         </div>
         `
@@ -180,7 +195,11 @@ export const ReactPhonenumber: React.FC<Props> = ({
       templateResult: templateResult,
       width: '100%',
       dropdownAutoWidth: true,
-      data: countries,
+      data: countries.map((country) => ({
+        ...country,
+        id: country.code,
+        selected: country.code === defaultCode
+      })),
       matcher: matchCustom,
       dropdownParent: $('#inputs-wrapper'),
       language: {
@@ -196,7 +215,8 @@ export const ReactPhonenumber: React.FC<Props> = ({
 
     $('.select-country-phonenumber').on('select2:select', function (e: any) {
       const data = e.params.data
-      handleSelectCodeArea(data.dialingCode)
+      handleOnChangeDialogCode(data.dialingCode)
+      handleOnChangeSelected({code: data.code, dialingCode: data.dialingCode, name: data.name})
     })
   }, [])
 
@@ -213,7 +233,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
         className={classes.inputsWrapper}
         dir={dir ? dir : 'ltr'}
       >
-        <select className='select-country-phonenumber'>empty</select>
+        <select className='select-country-phonenumber'></select>
         <input
           type='number'
           value={phoneNumberValue}
