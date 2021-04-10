@@ -192,7 +192,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
       return null
     }
 
-    ;($(`#${randomId}`) as any).select2({
+    ;($(`#${randomId} .select-country-phonenumber`) as any).select2({
       dir: 'ltr',
       templateSelection: formatState,
       templateResult: templateResult,
@@ -204,7 +204,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
         selected: country.code === defaultCode
       })),
       matcher: matchCustom,
-      dropdownParent: $(`#inputs-wrapper-${randomId}`),
+      dropdownParent: $(`#${randomId} #inputs-wrapper`),
       language: {
         noResults: function () {
           return '<div style="text-align: right; font-size: 13px">کشور مورد نظر شما پیدا نشد</div>'
@@ -216,7 +216,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
       ...options
     })
 
-    $(`#${randomId}`).on('select2:select', function (e: any) {
+    $(`#${randomId} .select-country-phonenumber`).on('select2:select', function (e: any) {
       const data = e.params.data
       handleOnChangeDialogCode(data.dialingCode)
       handleOnChangeSelected({
@@ -230,17 +230,18 @@ export const ReactPhonenumber: React.FC<Props> = ({
   return (
     <div
       className={className}
+      id={randomId}
       style={{
         position: 'relative',
         width: 'min-content'
       }}
     >
       <div
-        id={`inputs-wrapper-${randomId}`}
+        id='inputs-wrapper'
         className={classes.inputsWrapper}
         dir={dir ? dir : 'ltr'}
       >
-        <select id={randomId} className='select-country-phonenumber'></select>
+        <select className='select-country-phonenumber'></select>
         <input
           type='number'
           value={phoneNumberValue}
