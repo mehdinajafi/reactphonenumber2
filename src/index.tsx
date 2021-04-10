@@ -33,6 +33,9 @@ const useStyles = createUseStyles((props) => ({
       direction: 'ltr',
       MozAppearance: 'textfield'
     },
+    "& .phone-number-input:disabled": {
+      backgroundColor: "#ddd"
+    },
     '& .phone-number-input::-webkit-outer-spin-button, .phone-number-input::-webkit-inner-spin-button': {
       WebkitAppearance: 'none',
       margin: 0
@@ -53,6 +56,9 @@ const useStyles = createUseStyles((props) => ({
       fontSize: '14px',
       display: 'flex',
       alignItems: 'center'
+    },
+    "& .select2-container--default.select2-container--disabled .select2-selection--single": {
+      backgroundColor: "#ddd"
     },
     "& .select2-container--default[dir='rtl'] .select2-selection--single .select2-selection__arrow": {
       left: 'auto',
@@ -120,7 +126,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
       selected,
       Number(phoneNumberValue).toString()
     )
-  }, [selected, phoneNumberValue, onChange])
+  }, [selected, phoneNumberValue])
 
   // Select2
   React.useEffect(() => {
