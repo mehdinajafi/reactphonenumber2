@@ -1,6 +1,7 @@
 import * as React from 'react'
 import $ from 'jquery'
 import { createUseStyles } from 'react-jss'
+import { v4 as uuidv4 } from 'uuid'
 import 'select2/dist/js/select2.min.js'
 import 'select2/dist/css/select2.min.css'
 
@@ -93,6 +94,8 @@ export const ReactPhonenumber: React.FC<Props> = ({
       : countries[0].dialingCode
   )
 
+  const [randomId, setRandomId] = React.useState<string>(uuidv4())
+
   const classes = useStyles({ props: 'rtl' })
 
   // handle OnChanges
@@ -102,7 +105,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
     setPhoneNumberValue((e.target as HTMLInputElement).value)
   }
 
-  const handleOnChangeSelected = (country:country) => {
+  const handleOnChangeSelected = (country: country) => {
     setSelected(country)
   }
 
@@ -189,7 +192,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
       return null
     }
 
-    ;($('.select-country-phonenumber') as any).select2({
+    ;($(`#${randomId}`) as any).select2({
       dir: 'ltr',
       templateSelection: formatState,
       templateResult: templateResult,
@@ -201,7 +204,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
         selected: country.code === defaultCode
       })),
       matcher: matchCustom,
-      dropdownParent: $('#inputs-wrapper'),
+      dropdownParent: $(`#inputs-wrapper-${randomId}`),
       language: {
         noResults: function () {
           return '<div style="text-align: right; font-size: 13px">کشور مورد نظر شما پیدا نشد</div>'
@@ -213,10 +216,14 @@ export const ReactPhonenumber: React.FC<Props> = ({
       ...options
     })
 
-    $('.select-country-phonenumber').on('select2:select', function (e: any) {
+    $(`#${randomId}`).on('select2:select', function (e: any) {
       const data = e.params.data
       handleOnChangeDialogCode(data.dialingCode)
-      handleOnChangeSelected({code: data.code, dialingCode: data.dialingCode, name: data.name})
+      handleOnChangeSelected({
+        code: data.code,
+        dialingCode: data.dialingCode,
+        name: data.name
+      })
     })
   }, [])
 
@@ -229,11 +236,11 @@ export const ReactPhonenumber: React.FC<Props> = ({
       }}
     >
       <div
-        id='inputs-wrapper'
+        id={`inputs-wrapper-${randomId}`}
         className={classes.inputsWrapper}
         dir={dir ? dir : 'ltr'}
       >
-        <select className='select-country-phonenumber'></select>
+        <select id={randomId} className='select-country-phonenumber'></select>
         <input
           type='number'
           value={phoneNumberValue}
@@ -241,6 +248,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
           className='phone-number-input'
           dir='ltr'
           required
+          disabled={options?.disabled}
         />
       </div>
     </div>

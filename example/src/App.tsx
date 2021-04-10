@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import { ReactPhonenumber } from 'reactphonenumber2'
 
 const countries = [
@@ -12,11 +11,18 @@ const countries = [
 const App = () => {
   const [phoneNumber, setphoneNumber] = useState<string>('')
 
-  const changePhoneNumber = (phoneNumber: string, selected:any) => {
+  const changePhoneNumber = (phoneNumber: string, selected: any) => {
     setphoneNumber(phoneNumber ? phoneNumber : '')
-    console.log(JSON.stringify({
-      phoneNumber, selected
-    }, null, 2))
+    console.log(
+      JSON.stringify(
+        {
+          phoneNumber,
+          selected
+        },
+        null,
+        2
+      )
+    )
   }
 
   return (
@@ -25,7 +31,13 @@ const App = () => {
         options={{ dir: 'ltr' }}
         onChange={changePhoneNumber}
         countries={countries}
-        defaultCode="AS"
+        defaultCode='IR'
+      />
+      <ReactPhonenumber
+        options={{ dir: 'ltr' }}
+        onChange={changePhoneNumber}
+        countries={countries}
+        defaultCode='AS'
       />
     </div>
   )
