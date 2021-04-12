@@ -249,7 +249,7 @@ export const ReactPhonenumber: React.FC<Props> = ({
       >
         <select className='select-country-phonenumber'></select>
         <input
-          type='number'
+          type='tel'
           value={phoneNumberValue}
           onChange={(e) => handleOnChangePhoneNumberValue(e)}
           className='phone-number-input'
